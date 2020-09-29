@@ -1,0 +1,41 @@
+@font-face {
+  font-family: "BT";
+  src: url("fonts/BalooTammudu2-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "BT-b";
+  src: url("fonts/BalooTammudu2-Bold.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "BT-sb";
+    src: url("fonts/BalooTammudu2-SemiBold.ttf") format("truetype");
+  }
+h1{
+    font-family:"BT-b";
+    font-size: 22pt;
+    text-align: center;
+}
+
+h2, h3, h4, h5, h6{
+    font-family:"BT-sb";
+    margin: auto;
+    text-align: center;
+}
+
+body{
+    font-family:"BT";
+    font-size: 16pt;
+}
+
+div{
+    margin:auto;
+    text-align: center;
+}
+#videostreaming > img{
+    max-width: 80vw;
+    max-height: 60vh;
+    display: block;
+    margin: auto;
+}
