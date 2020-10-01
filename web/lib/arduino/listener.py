@@ -38,11 +38,6 @@ class Ardlistener:
             if (cfg.ser.inWaiting() > 0):
                 input = cfg.ser.readline()
                 args = input.decode('utf-8').split('&')
-                print()
-                print()
-                print(args[0], file=sys.stdout)
-                print()
-                print()
                 if len(args) == 3 and args[0] == "ard":
                     # valid serial input from arduino
                     event_str = args[1]

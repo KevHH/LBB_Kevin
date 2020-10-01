@@ -64,13 +64,13 @@ def gen(camera):
 @cfg.socketio.on('nudge')
 def on_nudge():
     cfg.ser.write( b'py&nudge\n' )
-    time.sleep(2)
+    time.sleep(0.1)
 
 # whisper
 @cfg.socketio.on('whisper')
 def on_whisper(response):
     cfg.ser.write(b'py&whisper&' + response.encode('utf-8') + b'\n')
-    time.sleep(2)
+    time.sleep(0.1)
 
 
 # ====================s
