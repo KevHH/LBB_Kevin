@@ -1,6 +1,6 @@
 '''
     References: 
-    - flask-sockietio https://medium.com/hackervalleystudio/weekend-project-part-2-turning-flask-into-a-real-time-websocket-server-using-flask-socketio-ab6b45f1d896
+    - flask-sockietio https://medium.com/hackervalleystudio/weekend-project-part-2-turning-flask-into-a-real-time-websocket-cfg.server-using-flask-cfg.socketio-ab6b45f1d896
     - streaming https://blog.miguelgrinberg.com/post/video-streaming-with-flask
 '''
 # web interface
@@ -10,6 +10,8 @@ from flask_socketio import SocketIO, join_room, emit, send
 # hardware interactions
 from lib.streaming.camera_pi import Camera
 from serial import Serial
+from lib.arduino.listener import Ardlistener
+import lib.arduino.cfg as cfg
 
 # system
 import time
@@ -24,8 +26,15 @@ from processing.stats import get_age
 #  set up 
 # ============
 
+cfg.init()
+
 app = Flask(__name__)
-socketio = SocketIO(app)
+cfg.socketio = SocketIO(app)
+ardlistener = Ardlistener()
+
+# open cfg.serial port
+cfg.ser = Serial('/dev/ttyUSB0', 19200)
+time.sleep(1.00)
 
 # ============
 #  Routing 
@@ -52,25 +61,33 @@ def gen(camera):
 # ====================
 
 # nudged
-@socketio.on('nudge')
+@cfg.socketio.on('nudge')
 def on_nudge():
-    ser.write( b'py&nudge\n' )
-    time.sleep(0.2)
+    cfg.ser.write( b'py&nudge\n' )
+    time.sleep(2)
 
 # whisper
-@socketio.on('whisper')
+@cfg.socketio.on('whisper')
 def on_whisper(response):
-    ser.write(b'py&whisper&' + response.encode('utf-8') + b'\n')
-    time.sleep(0.2)
+    cfg.ser.write(b'py&whisper&' + response.encode('utf-8') + b'\n')
+    time.sleep(2)
+
+
+# ====================s
+#  Listening to arduino
+# ====================
+def on_update_age(age):
+    cfg.socketio.emit("update_age", age, broadcast=True)
+ardlistener.register("update_age", on_update_age)
 
 # ============
 #  Main
 # ============
 
 if __name__ == '__main__':
-    # open serial port
-    ser = Serial('/dev/ttyUSB0', 19200)
-    time.sleep(1.00)
+
+    # listen to arduino
+    ardlistener.run()
 
     # run app
-    socketio.run(app, debug=True, port=8888, host='0.0.0.0')
+    cfg.socketio.run(app, debug=True, port=8888, host='0.0.0.0')

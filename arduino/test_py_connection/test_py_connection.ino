@@ -15,6 +15,7 @@ void setup() {
 }
 
 void loop() {
+  Serial.println("ard&update_age&10");
   delay(100);
   // listen to Serial from Python
   if (Serial.available() > 0) {    
@@ -71,7 +72,6 @@ void loop() {
         pyProcessing(pyMsg, pyData);
       }
       serialMemPointer = 0;
-      delay(100);
     }
   }
 }
