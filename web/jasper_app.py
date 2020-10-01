@@ -20,7 +20,7 @@ from processing.arduino.listener import Ardlistener
 import processing.arduino.cfg as cfg
 
 # software processing
-import zmq as zmq
+import zmq
 from processing.stats import get_age
 
 # ===========
@@ -29,10 +29,10 @@ from processing.stats import get_age
 
 context = zmq.Context()
 
-socket = context.socket(zmq.PUB)
+socket = context.socket(zmq.PAIR)
 socket.bind("tcp://127.0.0.1:6666")
 
-video_socket = context.socket(zmq.SUB)
+video_socket = context.socket(zmq.PAIR)
 video_socket.connect("tcp://127.0.0.1:6667")
 cfg.init()
 
