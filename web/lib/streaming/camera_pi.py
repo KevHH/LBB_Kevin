@@ -1,3 +1,7 @@
+'''
+    Source: - streaming https://blog.miguelgrinberg.com/post/video-streaming-with-flask
+'''
+
 import io
 import time
 import picamera

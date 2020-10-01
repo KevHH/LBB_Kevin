@@ -39,3 +39,33 @@ div{
     display: block;
     margin: auto;
 }
+
+.button{
+    background-color: lightslategray;
+    border: solid 2pt lightslategrey;
+    color: white;
+    font-family: BT;
+    font-size: 16px;
+    padding-top: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+    font-weight: bold;
+    cursor:pointer;
+}
+
+form{
+    font-size: 14px;
+    font-family: BT;
+    background-color: lightslategray;
+}
+
+form > input.whisper{
+    cursor:pointer;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+form > input.whisper:active,
+form > input.whisper:focus{
+    cursor:text;
+}
