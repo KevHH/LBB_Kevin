@@ -17,12 +17,8 @@ jQuery(function($){
         socket.emit("nudge");
     });
 
-    $("#read_ard").on("click", function(){
-        socket.emit("read_ard")
-    });
-
     $("#whisper_submit").on("click", function(){
-        socket.emit("whisper", $("#whisper_content").value());
+        socket.emit("whisper", $("#whisper_content").val());
     });
 });
 

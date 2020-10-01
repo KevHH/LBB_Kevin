@@ -7,28 +7,25 @@
 from flask import Flask, render_template, jsonify, Response
 from flask_socketio import SocketIO, join_room, emit, send
 
-
 # hardware interactions
 from lib.streaming.camera_pi import Camera
 from serial import Serial
 
-# others
-from datetime import datetime
+# system
 import time
-import threading
 import sys
+sys.path.append("..")
 
-# ============
+# software processing
+from processing.stats import get_age
+
+
+# ===========
 #  set up 
 # ============
 
-async_mode = None
 app = Flask(__name__)
-socketio = SocketIO(app, async_mode = async_mode)
-
-thread = None
-threadlock = threading.Lock()
-bglisteners = {}
+socketio = SocketIO(app)
 
 # ============
 #  Routing 
@@ -36,7 +33,7 @@ bglisteners = {}
 
 @app.route('/')
 def index():
-    return render_template('index.html', async_mode = async_mode)
+    return render_template('index.html', age = get_age())
 
 # streaming video
 @app.route('/video_feed')
@@ -58,87 +55,13 @@ def gen(camera):
 @socketio.on('nudge')
 def on_nudge():
     ser.write( b'py&nudge\n' )
-    time.sleep(1.00)
+    time.sleep(0.2)
 
 # whisper
 @socketio.on('whisper')
 def on_whisper(response):
     ser.write(b'py&whisper&' + response.encode('utf-8') + b'\n')
-    time.sleep(1.00)
-
-
-# ======================
-#  Listening to Arduino
-# ======================
-
-@socketio.on('read_ard')
-def on_read_ard():
-    if (ser.inWaiting() > 0):
-        input = ser.readline()
-        args = input.decode('utf-8').split('&')
-        print()
-        print()
-        print(args[2], file=sys.stdout)
-        print()
-        print()
-        if len(args) == 3 and args[0] == "ard":
-            # valid serial input from arduino
-            event_str = args[1]
-            data = args[2]
-            if event_str in bglisteners:
-                # event detected, execute all callbacks with data as the argument
-                for f in bglisteners[event_str]:
-                    f(data)
-
-
-
-#--------- main ---------------
-
-@socketio.on('connect', namespace='/background')
-def run_bg_thread():
-    print("TEST")
-    global thread
-    with threadlock:
-        if thread is None:
-            thread = socketio.start_background_task(target=bg_thread)
-    
-def bg_thread():
-    socketio.sleep(2)
-    emit("update_age", "10", namespace="/background", broadcast=True)    
-    '''
-    while True:
-        print("TEST", file=sys.stdout)
-        if (ser.inWaiting() > 0):
-            input = ser.readline()
-            args = input.decode('utf-8').split('&')
-            print()
-            print()
-            print(args[0], file=sys.stdout)
-            print()
-            print()
-            if len(args) == 3 and args[0] == "ard":
-                # valid serial input from arduino
-                event_str = args[1]
-                data = args[2]
-                if event_str in bglisteners:
-                    # event detected, execute all callbacks with data as the argument
-                    for f in bglisteners[event_str]:
-                        f(data)
-        time.sleep(0.100)
-        '''
-
-def register_bglisteners(event_str, f):
-    if event_str in bglisteners:
-        bglisteners[event_str].append(f)
-    else:
-        bglisteners[event_str] = [f]
-
-#--------- listeners --------------- 
-
-def on_update_age(age):
-    emit('update_age', age, broadcast=True)
-
-register_bglisteners('update_age', on_update_age)
+    time.sleep(0.2)
 
 # ============
 #  Main

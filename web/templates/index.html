@@ -12,15 +12,14 @@
    <body>
       <h1>Jasper's Brain</h1>
       <div id="info">
-          <div>Age: &nbsp;<span id="age"></span></div>
+          <div>Age: &nbsp;<span id="age">{{ age }}</span></div>
       </div>
       <br>
       <div style="display:flex; justify-content:center">
-        <button id="read_ard" class="button" type="button" style="margin-right:20px">Read</button>
         <button id="nudge" class="button" type="button" style="margin-right:20px">Nudge</button>
         <form style="position:relative">
             <input id="whisper_content" class="whisper"type="text" id="fname" name="fname" style="height: 30pt;border: solid 2pt lightslategray;width: min(50vw, 400px);overflow-x: scroll;padding-right: 75px;" placeholder="Your message">
-            <button id="whisper_submit" class="button" type="submit" style="position:absolute;right:0px">Whisper</button>
+            <button id="whisper_submit" class="button" type="button" style="position:absolute;right:0px">Whisper</button>
         </form>
       </div>
       <br>

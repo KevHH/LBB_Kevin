@@ -3,7 +3,7 @@ const int ledPin =  LED_BUILTIN;// the number of the LED pin
 const int musicLedPin = 11;
 
 // memory
-char serialMemArray[1000];
+char serialMemArray[50];
 long serialMemPointer = 0;
 
 
@@ -22,7 +22,7 @@ void loop() {
     if (newChar != '\n'){
       // continue reading
       serialMemPointer += 1;
-      serialMemArray[serialMemPointer] = newChar;
+      serialMemArray[serialMemPointer-1] = newChar;
     } else {
       // finish reading
       String msgType = "";
@@ -30,16 +30,14 @@ void loop() {
       String pyData = "";
       byte stage = 0; // 0: reading type; 1: reading message; 2: reading data
       bool validMsg = true;
+
       for (long i=0; i<serialMemPointer; i++){
+        
         char tmpChar = serialMemArray[i];
         if (tmpChar == '&'){
           switch (stage){
             case 0:
               if (!msgType.equals("py")){
-     digitalWrite(musicLedPin, HIGH);
-     delay(500);
-     digitalWrite(musicLedPin, LOW);
-                Serial.println("ard&update_age&" + msgType);
                 validMsg = false;
                 break;
               }
@@ -51,11 +49,14 @@ void loop() {
         } else {
           switch (stage){
             case 0:
-              msgType += tmpChar;
+              msgType = msgType + tmpChar;
+              break;
             case 1:
-              pyMsg += tmpChar;            
+              pyMsg = pyMsg + tmpChar; 
+              break;           
             case 2:
-              pyData += tmpChar;   
+              pyData = pyData + tmpChar; 
+              break;  
           }
         }
 
@@ -67,9 +68,6 @@ void loop() {
       // process message and data
       if (validMsg){
         
-     digitalWrite(musicLedPin, HIGH);
-     delay(500);
-     digitalWrite(musicLedPin, LOW);
         pyProcessing(pyMsg, pyData);
       }
       serialMemPointer = 0;
@@ -84,6 +82,7 @@ void pyProcessing(String msg, String data){
      digitalWrite(musicLedPin, HIGH);
      delay(500);
      digitalWrite(musicLedPin, LOW);
+     delay(500);
   } else if (msg.equals("whisper")){
      digitalWrite(musicLedPin, HIGH);
       delay(500);
@@ -92,5 +91,6 @@ void pyProcessing(String msg, String data){
      digitalWrite(musicLedPin, HIGH);
       delay(500);
      digitalWrite(musicLedPin, LOW);
+     delay(500);
   }
 }
