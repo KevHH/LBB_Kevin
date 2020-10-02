@@ -14,7 +14,6 @@ from flask import Flask, render_template, jsonify, Response
 from flask_socketio import SocketIO, join_room, emit, send
 
 # hardware interactions
-from processing.streaming.camera_pi import Camera
 from serial import Serial
 from processing.arduino.listener import Ardlistener
 import processing.arduino.cfg as cfg
@@ -30,10 +29,10 @@ from processing.stats import get_age
 context = zmq.Context()
 
 socket = context.socket(zmq.PAIR)
-socket.bind("tcp://127.0.0.1:6666")
+socket.bind("tcp://127.0.0.1:6000")
 
-video_socket = context.socket(zmq.PAIR)
-video_socket.connect("tcp://127.0.0.1:6667")
+eyes_socket = context.socket(zmq.PAIR)
+eyes_socket.connect("tcp://127.0.0.1:6001")
 cfg.init()
 
 app = Flask(__name__)
@@ -61,9 +60,9 @@ def video_feed():
 
 def gen():
     while True:
-        frame = video_socket.recv()
+        img_encoded = eyes_socket.recv()
         yield (b'--frame\r\n'
-               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+               b'Content-Type: image/jpeg\r\n\r\n' + img_encoded + b'\r\n')
 
 # ====================
 #  Listening to client
@@ -99,9 +98,9 @@ if __name__ == '__main__':
     ardlistener.run()
 
     # run app
-    cfg.socketio.run(app, debug=True, port=8888, host='0.0.0.0', use_reloader=False)
+    cfg.socketio.run(app, debug=False, port=8888, host='0.0.0.0', use_reloader=False)
 
     # termination
     socket.close()
-    video_socket.close()
+    eyes_socket.close()
     context.destroy()
