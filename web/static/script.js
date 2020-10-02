@@ -3,14 +3,6 @@ var socket = io();
 
 jQuery(function($){
     /**
-     *  Listen to server 
-     */
-
-    socket.on('update_age', function(response){
-        $("#age").html(response);    
-    });
-
-    /**
      *  Talk to server 
      */
     $("#nudge").on("click", function(){
@@ -19,6 +11,14 @@ jQuery(function($){
 
     $("#whisper_submit").on("click", function(){
         socket.emit("whisper", $("#whisper_content").val());
+    });
+
+    $("#shutdown").on("click", function(){
+        socket.emit("shutdown");
+    });
+
+    $("#test_submit").on("click", function(){
+        socket.emit("test", $("#test_msg").val() + "&" + $("#test_data").val());
     });
 });
 

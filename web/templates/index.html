@@ -16,10 +16,11 @@
       </div>
       <br>
       <div style="display:flex; justify-content:center">
+        <button id="shutdown" class="button" type="button" style="margin-right:20px;background-color:palevioletred; border-color:palevioletred">Shutdown</button>
         <button id="nudge" class="button" type="button" style="margin-right:20px">Nudge</button>
         <form style="position:relative">
-            <input id="whisper_content" class="whisper"type="text" id="fname" name="fname" style="height: 30pt;border: solid 2pt lightslategray;width: min(50vw, 400px);overflow-x: scroll;padding-right: 75px;" placeholder="Your message">
-            <button id="whisper_submit" class="button" type="button" style="position:absolute;right:0px">Whisper</button>
+            <input id="whisper_content" class="whisper"type="text" style="height: 30pt;border: solid 2pt lightslategray;width: min(50vw, 400px);overflow-x: scroll;padding-right: 75px;" placeholder="Your message">
+            <button id="whisper_submit" class="button" type="button" style="position:absolute;right:0px; height: 47.3125px">Whisper</button>
         </form>
       </div>
       <br>
@@ -27,5 +28,12 @@
           <h3>Jasper's Eyes</h3>
           <img src="{{ url_for('video_feed') }}">
       </div>
+      <br>
+      <h3>Jasper's Reflexes</h3>        
+      <form style="position:relative">
+        <input id="test_msg" type="text" style="height: 30pt;border: solid 2pt lightslategray;width: min(50vw, 400px);overflow-x: scroll;padding-right: 75px;" placeholder="Test message">
+        <input id="test_data" type="text" style="height: 30pt;border: solid 2pt lightslategray;overflow-x: scroll;padding-right: 75px;" placeholder="Test data">
+        <button id="test_submit" class="button" type="button" style="position:absolute;right:0px; hwidth: min(50vw, 400px); height: 47.3125px">Trigger</button>
+    </form>
    </body>
 </html>

@@ -6,7 +6,6 @@ const int musicLedPin = 11;
 char serialMemArray[50];
 long serialMemPointer = 0;
 
-
 void setup() {
   pinMode(ledPin, OUTPUT);
   pinMode(musicLedPin, OUTPUT);
